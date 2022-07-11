@@ -35,6 +35,29 @@ for links in kpop:
 
 for genres in kpoptitles:
     print(genres)
-# Prints out all the genres available
+# Prints out all the genres available for users
+
+print('rnh = rock&hiphop | rns = r&bsoul') # Just in case for users
+
+userin = input("What are you feeling\nEnter a genre from above: ")
+# Ask for genre
+
+userpick = BeautifulSoup(requests.get(kpoptitles[userin]).text,'html.parser')
+# Render the website the user chose to webscrape
+topn = []
+usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
+
+for titles in userpick.findAll('p',{'class':'title'}):
+    if len(topn) == usern:
+        break
+    topn.append(titles.text[1:-1])
+# Searches for the top {usern} songs and appends to topn
+
+print('Here are the',usern,'most popular songs in the',userin,'genre.')
+for n, i in enumerate(topn):
+    print(n+1,'. ',i,sep='')
+# prints the songs out
+
+
 
 
