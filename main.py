@@ -1,8 +1,14 @@
 import requests, re, urllib.request
 from bs4 import BeautifulSoup
 
+def addTitles(doc,s,dic,l):
+    for i in doc.findAll(s,dic):
+        l.append(i.text[1:-1])
+    return l
+# A function for appending all titles in a webpage into a list.
+
 chart = 'https://music.bugs.co.kr/chart'
- # Start Website to webscrape from
+# Start Website to webscrape from
 
 chartdoc = BeautifulSoup(requests.get(chart).text, 'html.parser')
 # Using bs4 to process the page 
@@ -30,32 +36,55 @@ prefi = 'https://music.bugs.co.kr/genre/chart/kpop'
 for links in kpop:
     if prefi in links:
         kpoptitles[(links[42:-10])] = links
-# Finds all links with prefixes. Then, creates keys/values for genre
-# and links to that genre
+# Finds all links with prefixes. Then, creates keys/values for genre and links to that genre
 
-for genres in kpoptitles:
-    print(genres)
-# Prints out all the genres available for users
+boo = True # Loopy doo
+topchart = [] # Initializing a list to store all top titles
 
-print('rnh = rock&hiphop | rns = r&bsoul') # Just in case for users
+while boo:
+    inp = int(input('1 for Top Chart\n2 for Top Chart in specific Genre\nEnter Here: '))
+    # User input to choose between broad or narrow
+    if inp == 1:
+        usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
+        topchart = addTitles(chartdoc,'p',{'class':'title'},topchart)[0:usern]
+        print('Here are the',usern,'most popular songs')
+    elif inp == 2:
+        for genres in kpoptitles:
+            print(genres.upper())
+        # Prints out all the genres available for users
+        print('RNH = rock&hiphop | RNS = r&bsoul') # Just in case for users
+        userin = input("What are you feeling?\n\nEnter a genre from above: ")
+        usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
+        userpick = BeautifulSoup(requests.get(kpoptitles[userin]).text,'html.parser')
+        topchart = addTitles(userpick,'p',{'class':'title'},topchart)[0:usern]
+        print('Here are the',usern,'most popular songs in the',userin,'genre.')
+    else:
+        print('You may only enter 1 or 2')
+        continue
+    
+    
+    for n, i in enumerate(topchart):
+        print(n+1,'. ',i,sep='')
+    redo = input('y to startover\nn to exit')
+    if redo == 'y':
+        continue
+    elif redo =='n':
+        print('Have a great day :)')
+        break
+    else:
+        print('y or n please')
+    
 
-userin = input("What are you feeling\nEnter a genre from above: ")
+
 # Ask for genre
 
-userpick = BeautifulSoup(requests.get(kpoptitles[userin]).text,'html.parser')
-# Render the website the user chose to webscrape
-topn = []
-usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
 
-for titles in userpick.findAll('p',{'class':'title'}):
-    if len(topn) == usern:
-        break
-    topn.append(titles.text[1:-1])
+# Render the website the user chose to webscrape
+
+
 # Searches for the top {usern} songs and appends to topn
 
-print('Here are the',usern,'most popular songs in the',userin,'genre.')
-for n, i in enumerate(topn):
-    print(n+1,'. ',i,sep='')
+
 # prints the songs out
 
 
