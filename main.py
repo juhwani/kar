@@ -38,25 +38,30 @@ for links in kpop:
         kpoptitles[(links[42:-10])] = links
 # Finds all links with prefixes. Then, creates keys/values for genre and links to that genre
 
-boo = True # Loopy doo
 topchart = [] # Initializing a list to store all top titles
 
-while boo:
+while True: 
     inp = int(input('1 for Top Chart\n2 for Top Chart in specific Genre\nEnter Here: '))
     # User input to choose between broad or narrow
     if inp == 1:
         usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
         topchart = addTitles(chartdoc,'p',{'class':'title'},topchart)[0:usern]
+        # Use Function to create list that contains top titles
+
         print('Here are the',usern,'most popular songs')
     elif inp == 2:
         for genres in kpoptitles:
             print(genres.upper())
         # Prints out all the genres available for users
-        print('RNH = rock&hiphop | RNS = r&bsoul') # Just in case for users
+        print('RNH = rock&hiphop | RNS = r&bsoul') # Help users understand better
         userin = input("What are you feeling?\n\nEnter a genre from above: ")
         usern = int(input("Enter up to how many songs you want to see (Up to 100): "))
         userpick = BeautifulSoup(requests.get(kpoptitles[userin]).text,'html.parser')
+        # Render selected genre page to webscrape
+
         topchart = addTitles(userpick,'p',{'class':'title'},topchart)[0:usern]
+        # Use Function to create list that contains top titles for user selected genre
+
         print('Here are the',usern,'most popular songs in the',userin,'genre.')
     else:
         print('You may only enter 1 or 2')
@@ -65,7 +70,10 @@ while boo:
     
     for n, i in enumerate(topchart):
         print(n+1,'. ',i,sep='')
+    # Easier for users to look at
+
     redo = input('y to startover\nn to exit')
+    
     if redo == 'y':
         continue
     elif redo =='n':
@@ -76,13 +84,10 @@ while boo:
     
 
 
-# Ask for genre
 
 
-# Render the website the user chose to webscrape
 
 
-# Searches for the top {usern} songs and appends to topn
 
 
 # prints the songs out
